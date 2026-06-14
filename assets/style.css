@@ -101,3 +101,30 @@
     padding: 6px;
     text-align: left;
 }
+.cm-inline-registration-form {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.cm-inline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.cm-inline-registration-form input {
+    width: 100%;
+    padding: 6px;
+}
+
+.cm-inline-registration-form button {
+    background: #0073aa;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
