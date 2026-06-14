@@ -184,7 +184,6 @@ add_shortcode(
 function cm_replace_single_course_content($content)
 {
     if (
-        is_singular('course') &&
         in_the_loop() &&
         is_main_query()
     ) {
@@ -193,8 +192,3 @@ function cm_replace_single_course_content($content)
 
     return $content;
 }
-
-add_filter(
-    'the_content',
-    'cm_replace_single_course_content'
-);
