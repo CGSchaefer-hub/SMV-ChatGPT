@@ -63,3 +63,22 @@ function cm_api_get_courses($request)
 
     return rest_ensure_response($data);
 }
+
+function cm_api_get_course($request)
+{
+    $id = (int)$request['id'];
+
+    $course = get_post($id);
+
+    if (!$course || $course->post_type !== 'course') {
+        return new WP_Error('not_found', 'Course not found', ['status' => 404]);
+    }
+
+    return [
+        'id' => $course->ID,
+        'title' => $course->post_title,
+        'content' => apply_filters('the_content', $course->post_content),
+        'max' => (int)get_post_meta($id, '_cm_max_participants', true),
+        'current' => cm_get_participant_total($id)
+    ];
+}
