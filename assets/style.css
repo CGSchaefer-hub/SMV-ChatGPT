@@ -1,0 +1,103 @@
+.cm-course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.cm-course-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.cm-course-card h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.cm-course-table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.cm-course-table th,
+.cm-course-table td {
+    text-align: left;
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.cm-course-button {
+    margin-top: 10px;
+}
+
+.cm-course-full {
+    color: #b00020;
+    font-weight: bold;
+}
+
+.cm-course {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.cm-registration-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.cm-registration-form button {
+    padding: 10px 15px;
+    background: #0073aa;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.cm-success {
+    background: #e7f7e7;
+    padding: 10px;
+    border-left: 4px solid #46b450;
+    margin-bottom: 10px;
+}
+
+.cm-error {
+    background: #ffe7e7;
+    padding: 10px;
+    border-left: 4px solid #dc3232;
+    margin-bottom: 10px;
+}
+
+.cm-dashboard {
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.cm-course-dashboard {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.cm-participant-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.cm-participant-table th,
+.cm-participant-table td {
+    border-bottom: 1px solid #eee;
+    padding: 6px;
+    text-align: left;
+}
