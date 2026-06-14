@@ -9,6 +9,53 @@ if (!defined('ABSPATH')) {
 | Shortcode [kursliste]
 |--------------------------------------------------------------------------
 */
+function cm_app_render_course_list()
+{
+    $courses = get_posts([
+        'post_type' => 'course',
+        'post_status' => 'publish',
+        'posts_per_page' => -1
+    ]);
+
+    ob_start();
+    ?>
+
+    <div class="cm-course-list">
+
+        <h1>Alle Kurse</h1>
+
+        <?php foreach ($courses as $course) : ?>
+
+            <?php
+            $max = (int)get_post_meta($course->ID, '_cm_max_participants', true);
+            $current = cm_get_participant_total($course->ID);
+            $free = max(0, $max - $current);
+            ?>
+
+            <div class="cm-course-card">
+
+                <h2><?php echo esc_html($course->post_title); ?></h2>
+
+                <p><?php echo wp_trim_words($course->post_content, 20); ?></p>
+
+                <p>
+                    Plätze: <?php echo $current; ?>/<?php echo $max; ?>
+                </p>
+
+                <a class="button"
+                   href="<?php echo site_url('/kurs?course_id=' . $course->ID); ?>">
+                    weiterlesen
+                </a>
+
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
+    <?php
+    return ob_get_clean();
+}
 
 function cm_shortcode_kursliste($atts)
 {
