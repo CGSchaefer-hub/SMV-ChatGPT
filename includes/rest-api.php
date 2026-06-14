@@ -113,3 +113,33 @@ function cm_api_register($request)
         'message' => 'Registered successfully'
     ];
 }
+
+function cm_api_create_course($request)
+{
+    $user_id = get_current_user_id();
+
+    $data = $request->get_json_params();
+
+    $title = sanitize_text_field($data['title']);
+    $content = wp_kses_post($data['content']);
+    $max = intval($data['max']);
+
+    if (!$title) {
+        return new WP_Error('missing_title', 'Title required', ['status' => 400]);
+    }
+
+    $course_id = wp_insert_post([
+        'post_type'   => 'course',
+        'post_title'  => $title,
+        'post_content'=> $content,
+        'post_status' => 'publish',
+        'post_author' => $user_id
+    ]);
+
+    update_post_meta($course_id, '_cm_max_participants', $max);
+
+    return [
+        'success' => true,
+        'course_id' => $course_id
+    ];
+}
