@@ -4,6 +4,54 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+function cm_app_render_single_course($course_id)
+{
+    $course = get_post($course_id);
+
+    if (!$course || $course->post_type !== 'course') {
+        return '<p>Kurs nicht gefunden</p>';
+    }
+
+    ob_start();
+    ?>
+
+    <div class="cm-course">
+
+        <a href="<?php echo site_url('/kurse'); ?>">← zurück</a>
+
+        <h1><?php echo esc_html($course->post_title); ?></h1>
+
+        <div>
+            <?php echo apply_filters('the_content', $course->post_content); ?>
+        </div>
+
+        <hr>
+
+        <p>
+            Teilnehmer:
+            <?php echo cm_get_participant_total($course_id); ?>
+        </p>
+
+        <p>
+            Freie Plätze:
+            <?php
+            $max = (int)get_post_meta($course_id, '_cm_max_participants', true);
+            echo max(0, $max - cm_get_participant_total($course_id));
+            ?>
+        </p>
+
+        <hr>
+
+        <h2>Anmeldung</h2>
+
+        <?php echo cm_render_registration_form($course_id); ?>
+
+    </div>
+
+    <?php
+    return ob_get_clean();
+}
+
 /*
 |--------------------------------------------------------------------------
 | Inline Formular für Kurslisten
