@@ -6,6 +6,49 @@ if (!defined('ABSPATH')) {
 
 /*
 |--------------------------------------------------------------------------
+| Inline Formular für Kurslisten
+|--------------------------------------------------------------------------
+*/
+
+function cm_render_inline_registration_form($course_id)
+{
+    if (cm_is_course_full($course_id)) {
+        return '<p><strong>Dieser Kurs ist ausgebucht.</strong></p>';
+    }
+
+    ob_start();
+    ?>
+
+    <form method="post" class="cm-inline-registration-form">
+
+        <?php wp_nonce_field('cm_register_course', 'cm_register_nonce'); ?>
+
+        <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>">
+
+        <div class="cm-inline-grid">
+
+            <input type="text" name="firstname" placeholder="Vorname *" required>
+
+            <input type="text" name="lastname" placeholder="Nachname *" required>
+
+            <input type="email" name="email" placeholder="E-Mail *" required>
+
+            <input type="text" name="phone" placeholder="Telefon (optional)">
+
+        </div>
+
+        <button type="submit" name="cm_register_submit">
+            Jetzt anmelden
+        </button>
+
+    </form>
+
+    <?php
+    return ob_get_clean();
+}
+
+/*
+|--------------------------------------------------------------------------
 | Anmeldung verarbeiten
 |--------------------------------------------------------------------------
 */
