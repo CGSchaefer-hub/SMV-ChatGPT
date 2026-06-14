@@ -143,3 +143,15 @@ function cm_api_create_course($request)
         'course_id' => $course_id
     ];
 }
+function cm_api_check_auth($request)
+{
+    $token = $request->get_header('Authorization');
+
+    if (!$token) {
+        return false;
+    }
+
+    $user = wp_get_current_user();
+
+    return $user && $user->ID > 0;
+}
