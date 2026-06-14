@@ -298,4 +298,8 @@ add_shortcode(
     'meine_kurse',
     'cm_shortcode_meine_kurse'
 );
-add_shortcode('kurs_erstellen', 'cm_render_frontend_course_form');
+
+add_shortcode(
+    'kurs_erstellen',
+    'cm_render_frontend_course_form'
+);
