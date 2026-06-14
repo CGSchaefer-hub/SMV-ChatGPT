@@ -270,20 +270,10 @@ function cm_shortcode_meine_kurse()
 
                         <p>
 
-                            <a
-                                class="button button-primary"
-                                href="<?php echo esc_url(
-                                    add_query_arg(
-                                        'course_id',
-                                        $course_id,
-                                        admin_url(
-                                            'admin.php?page=course-manager-export'
-                                        )
-                                    )
-                                ); ?>"
-                            >
-                                CSV exportieren
-                            </a>
+                            <a class="button button-primary"
+   href="<?php echo esc_url(cm_get_csv_export_url($course_id)); ?>">
+    CSV exportieren
+</a>
 
                         </p>
 
