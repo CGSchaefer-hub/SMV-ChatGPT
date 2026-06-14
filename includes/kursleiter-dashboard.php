@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once CM_PLUGIN_DIR . 'includes/frontend-course-form.php';
+
 /*
 |--------------------------------------------------------------------------
 | Teilnehmer löschen
@@ -61,236 +63,115 @@ add_action('init', 'cm_handle_delete_participant');
 
 function cm_shortcode_meine_kurse()
 {
-    if (
-        !is_user_logged_in()
-    ) {
+    if (!is_user_logged_in()) {
         return '<p>Bitte zuerst anmelden.</p>';
     }
 
-    if (
-        !cm_user_is_admin() &&
-        !cm_user_is_kursleiter()
-    ) {
+    if (!cm_user_is_admin() && !cm_user_is_kursleiter()) {
         return '<p>Du bist kein Kursleiter.</p>';
     }
 
-    $args = [
-        'post_type' => 'course',
-        'post_status' => ['publish', 'draft'],
-        'posts_per_page' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC'
-    ];
-
-    if (!cm_user_is_admin()) {
-        $args['author'] = get_current_user_id();
-    }
-
-    $courses = get_posts($args);
+    $view = $_GET['view'] ?? 'list';
 
     ob_start();
-
     ?>
 
     <div class="cm-dashboard">
 
-        <h2>Meine Kurse</h2>
+        <h2>Mein Kurs-Dashboard</h2>
 
-        <?php if (empty($courses)) : ?>
+        <!-- Navigation -->
+        <p>
+            <a href="<?php echo add_query_arg('view', 'list'); ?>" class="button">
+                Meine Kurse
+            </a>
 
-            <p>Es wurden keine Kurse gefunden.</p>
+            <a href="<?php echo add_query_arg('view', 'create'); ?>" class="button button-primary">
+                + Kurs erstellen
+            </a>
+        </p>
 
-        <?php else : ?>
+        <hr>
 
-            <?php foreach ($courses as $course) : ?>
+        <?php
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW: KURS ERSTELLEN
+        |--------------------------------------------------------------------------
+        */
 
-                <?php
+        if ($view === 'create') {
 
-                $course_id = $course->ID;
+            echo cm_render_frontend_course_form();
 
-                $participants = cm_get_participants(
-                    $course_id
-                );
+        } else {
 
-                $max_participants = (int)get_post_meta(
-                    $course_id,
-                    '_cm_max_participants',
-                    true
-                );
+            /*
+            |--------------------------------------------------------------------------
+            | VIEW: LISTE
+            |--------------------------------------------------------------------------
+            */
 
-                ?>
+            $args = [
+                'post_type' => 'course',
+                'post_status' => ['publish', 'draft'],
+                'posts_per_page' => -1,
+                'orderby' => 'date',
+                'order' => 'DESC'
+            ];
 
-                <div class="cm-course-dashboard">
+            if (!cm_user_is_admin()) {
+                $args['author'] = get_current_user_id();
+            }
 
-                    <h3>
-                        <?php echo esc_html(
-                            get_the_title($course_id)
-                        ); ?>
-                    </h3>
+            $courses = get_posts($args);
+            ?>
 
-                    <p>
+            <h3>Meine Kurse</h3>
 
-                        <strong>Teilnehmer:</strong>
+            <?php if (empty($courses)) : ?>
 
-                        <?php echo count($participants); ?>
+                <p>Keine Kurse vorhanden.</p>
 
-                        /
+            <?php else : ?>
 
-                        <?php echo $max_participants; ?>
+                <?php foreach ($courses as $course) : ?>
 
-                    </p>
+                    <?php
+                    $participants = cm_get_participants($course->ID);
+                    $max = (int) get_post_meta($course->ID, '_cm_max_participants', true);
+                    ?>
 
-                    <p>
+                    <div class="cm-course-dashboard">
 
-                        <a
-                            class="button"
-                            href="<?php echo esc_url(
-                                get_permalink($course_id)
-                            ); ?>"
-                        >
-                            Kurs anzeigen
+                        <h3><?php echo esc_html($course->post_title); ?></h3>
+
+                        <p>
+                            Teilnehmer:
+                            <?php echo count($participants); ?>
+                            /
+                            <?php echo $max; ?>
+                        </p>
+
+                        <a class="button" href="<?php echo get_permalink($course->ID); ?>">
+                            Anzeigen
                         </a>
 
-                        <a
-                            class="button"
-                            href="<?php echo esc_url(
-                                admin_url(
-                                    'post.php?post=' .
-                                    $course_id .
-                                    '&action=edit'
-                                )
-                            ); ?>"
-                        >
+                        <a class="button" href="<?php echo admin_url('post.php?post=' . $course->ID . '&action=edit'); ?>">
                             Bearbeiten
                         </a>
 
-                    </p>
+                    </div>
 
-                    <h4>Teilnehmerliste</h4>
+                <?php endforeach; ?>
 
-                    <?php if (empty($participants)) : ?>
+            <?php endif; ?>
 
-                        <p>Noch keine Anmeldungen vorhanden.</p>
-
-                    <?php else : ?>
-
-                        <table class="cm-participant-table">
-
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>E-Mail</th>
-                                    <th>Telefon</th>
-                                    <th>Datum</th>
-                                    <th>Aktion</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-
-                            <?php foreach ($participants as $participant) : ?>
-
-                                <tr>
-
-                                    <td>
-
-                                        <?php
-                                        echo esc_html(
-                                            $participant->firstname .
-                                            ' ' .
-                                            $participant->lastname
-                                        );
-                                        ?>
-
-                                    </td>
-
-                                    <td>
-
-                                        <?php
-                                        echo esc_html(
-                                            $participant->email
-                                        );
-                                        ?>
-
-                                    </td>
-
-                                    <td>
-
-                                        <?php
-                                        echo esc_html(
-                                            $participant->phone
-                                        );
-                                        ?>
-
-                                    </td>
-
-                                    <td>
-
-                                        <?php
-                                        echo esc_html(
-                                            date_i18n(
-                                                'd.m.Y H:i',
-                                                strtotime(
-                                                    $participant->created_at
-                                                )
-                                            )
-                                        );
-                                        ?>
-
-                                    </td>
-
-                                    <td>
-
-                                        <a
-                                            class="button button-secondary"
-                                            href="<?php echo esc_url(
-                                                wp_nonce_url(
-                                                    add_query_arg(
-                                                        'cm_delete_participant',
-                                                        $participant->id
-                                                    ),
-                                                    'cm_delete_participant_' .
-                                                    $participant->id
-                                                )
-                                            ); ?>"
-                                            onclick="return confirm('Teilnehmer wirklich löschen?');"
-                                        >
-                                            Löschen
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                            <?php endforeach; ?>
-
-                            </tbody>
-
-                        </table>
-
-                        <p>
-
-                            <a class="button button-primary"
-   href="<?php echo esc_url(cm_get_csv_export_url($course_id)); ?>">
-    CSV exportieren
-</a>
-
-                        </p>
-
-                    <?php endif; ?>
-
-                </div>
-
-                <hr>
-
-            <?php endforeach; ?>
-
-        <?php endif; ?>
+        <?php } ?>
 
     </div>
 
     <?php
-
     return ob_get_clean();
 }
 
