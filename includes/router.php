@@ -2,6 +2,8 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once CM_PLUGIN_DIR . 'includes/router.php';
+
 /*
 |--------------------------------------------------------------------------
 | APP ROUTER
