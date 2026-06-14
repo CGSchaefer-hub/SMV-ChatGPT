@@ -35,3 +35,31 @@ add_action('rest_api_init', function () {
     ]);
 
 });
+
+function cm_api_get_courses($request)
+{
+    $courses = get_posts([
+        'post_type' => 'course',
+        'post_status' => 'publish',
+        'posts_per_page' => -1
+    ]);
+
+    $data = [];
+
+    foreach ($courses as $course) {
+
+        $max = (int)get_post_meta($course->ID, '_cm_max_participants', true);
+        $current = cm_get_participant_total($course->ID);
+
+        $data[] = [
+            'id' => $course->ID,
+            'title' => $course->post_title,
+            'description' => wp_trim_words($course->post_content, 30),
+            'max' => $max,
+            'current' => $current,
+            'free' => max(0, $max - $current)
+        ];
+    }
+
+    return rest_ensure_response($data);
+}
