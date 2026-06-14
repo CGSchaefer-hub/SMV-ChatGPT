@@ -118,12 +118,21 @@ function cm_shortcode_kursliste($atts)
 
                     <?php if ($free_places > 0) : ?>
 
-                        <a
-                            class="button"
-                            href="<?php echo esc_url(get_permalink($course_id)); ?>"
-                        >
-                            Kurs anzeigen
-                        </a>
+                        <?php if ($free_places > 0) : ?>
+
+    <a class="button cm-toggle-form" data-id="<?php echo $course_id; ?>">
+        Jetzt anmelden
+    </a>
+
+    <div id="cm-form-<?php echo $course_id; ?>" style="display:none;">
+        <?php echo cm_render_inline_registration_form($course_id); ?>
+    </div>
+
+<?php else : ?>
+
+    <span class="cm-course-full">Ausgebucht</span>
+
+<?php endif; ?>
 
                     <?php else : ?>
 
