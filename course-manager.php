@@ -32,6 +32,7 @@ require_once CM_PLUGIN_DIR . 'includes/shortcode-kurs.php';
 require_once CM_PLUGIN_DIR . 'includes/kursleiter-dashboard.php';
 require_once CM_PLUGIN_DIR . 'includes/csv-export.php';
 require_once CM_PLUGIN_DIR . 'includes/admin-pages.php';
+require_once CM_PLUGIN_DIR . 'includes/rest-api.php';
 
 /*
 |--------------------------------------------------------------------------
