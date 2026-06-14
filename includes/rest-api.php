@@ -82,3 +82,34 @@ function cm_api_get_course($request)
         'current' => cm_get_participant_total($id)
     ];
 }
+
+function cm_api_register($request)
+{
+    $data = $request->get_json_params();
+
+    $course_id = intval($data['course_id']);
+    $firstname = sanitize_text_field($data['firstname']);
+    $lastname  = sanitize_text_field($data['lastname']);
+    $email     = sanitize_email($data['email']);
+    $phone     = sanitize_text_field($data['phone'] ?? '');
+
+    if (!$course_id || !$firstname || !$lastname || !$email) {
+        return new WP_Error('missing_fields', 'Missing fields', ['status' => 400]);
+    }
+
+    if (cm_is_course_full($course_id)) {
+        return new WP_Error('full', 'Course is full', ['status' => 403]);
+    }
+
+    cm_add_participant($course_id, [
+        'firstname' => $firstname,
+        'lastname'  => $lastname,
+        'email'     => $email,
+        'phone'     => $phone
+    ]);
+
+    return [
+        'success' => true,
+        'message' => 'Registered successfully'
+    ];
+}
