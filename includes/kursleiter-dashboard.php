@@ -99,18 +99,6 @@ function cm_shortcode_meine_kurse()
         | VIEW: KURS ERSTELLEN
         |--------------------------------------------------------------------------
         */
-    
-<a class="button button-primary"
-href="<?php echo site_url('/kurs-erstellen'); ?>">
-Neuen Kurs erstellen
-</a>
-
-<a class="button"
-href="<?php echo site_url(
-'/kurs-bearbeiten?course_id=' . $course->ID
-); ?>">
-Bearbeiten
-</a>
         
         if ($view === 'create') {
 
