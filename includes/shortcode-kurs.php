@@ -29,10 +29,7 @@ function cm_shortcode_kurs($atts)
     $course_id = intval($atts['id']);
 
     // Falls keine ID angegeben wurde und man sich auf einer Kursseite befindet
-    if (
-        $course_id === 0 &&
-        is_singular('course')
-    ) {
+    if ($course_id === 0) {
         $course_id = get_the_ID();
     }
 
