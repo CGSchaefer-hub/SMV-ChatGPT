@@ -22,8 +22,13 @@ function cm_app_router()
 
     if ($path === 'kurse') {
 
-        echo cm_app_render_course_list();
-        exit;
+get_header();
+
+echo cm_app_render_course_list();
+
+get_footer();
+
+exit;
     }
 
     /*
